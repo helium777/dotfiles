@@ -67,5 +67,5 @@ fi
 # starship
 if ! which starship > /dev/null; then
     echo -e "\n===> Installing ${RED}starship${NC}"
-    cargo install starship --locked
+    $HOME/.cargo/bin/cargo install starship --locked
 fi
