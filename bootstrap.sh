@@ -1,9 +1,12 @@
 # clone into .local/dotfiles
 cd ~/.local
 [ -d dotfiles ] || git clone https://github.com/helium777/dotfiles.git
+cd dotfiles
+
+# update repo
+git pull
 
 # install nessessary packages
-cd dotfiles
 bash install.sh
 
 # source init.zsh in .zshrc
