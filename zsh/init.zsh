@@ -3,6 +3,9 @@
 # skip if not running interactively
 [ -z "$PS1" ] && return
 
+# skip if NO_INIT is set
+[ -n "$NO_INIT" ] && return
+
 # remove duplicates from PATH
 export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
 
