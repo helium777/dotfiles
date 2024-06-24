@@ -22,50 +22,30 @@ if ! which fzf > /dev/null; then
     ~/.fzf/install --key-bindings --completion --no-update-rc
 fi
 
-# eza
-if ! which eza > /dev/null; then
-    echo -e "\n===> Installing ${RED}eza${NC}"
-    $HOME/.cargo/bin/cargo install eza
-fi
+# tools written in rust
+rust_tools=(
+    eza
+    bat
+    fd
+    procs
+    tokei
+    tldr
+    zoxide
+    starship
+)
 
-# bat
-if ! which bat > /dev/null; then
-    echo -e "\n===> Installing ${RED}bat${NC}"
-    $HOME/.cargo/bin/cargo install bat
-fi
+for tool in ${rust_tools[@]}; do
+    # package name is different in some cases
+    if [ "$tool" == "fd" ]; then
+        package="fd-find"
+    elif [ "$tool" == "tldr" ]; then
+        package="tlrc"
+    else
+        package=$tool
+    fi
 
-# fd
-if ! which fd > /dev/null; then
-    echo -e "\n===> Installing ${RED}fd${NC}"
-    $HOME/.cargo/bin/cargo install fd-find
-fi
-
-# procs
-if ! which procs > /dev/null; then
-    echo -e "\n===> Installing ${RED}procs${NC}"
-    $HOME/.cargo/bin/cargo install procs
-fi
-
-# tokei
-if ! which tokei > /dev/null; then
-    echo -e "\n===> Installing ${RED}tokei${NC}"
-    $HOME/.cargo/bin/cargo install tokei
-fi
-
-# tldr
-if ! which tldr > /dev/null; then
-    echo -e "\n===> Installing ${RED}tldr${NC}"
-    $HOME/.cargo/bin/cargo install tlrc
-fi
-
-# zoxide
-if ! which zoxide > /dev/null; then
-    echo -e "\n===> Installing ${RED}zoxide${NC}"
-    $HOME/.cargo/bin/cargo install zoxide
-fi
-
-# starship
-if ! which starship > /dev/null; then
-    echo -e "\n===> Installing ${RED}starship${NC}"
-    $HOME/.cargo/bin/cargo install starship --locked
-fi
+    if ! which $tool > /dev/null; then
+        echo -e "\n===> Installing ${RED}$tool${NC}"
+        $HOME/.cargo/bin/cargo install $package
+    fi
+done
