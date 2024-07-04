@@ -1,3 +1,7 @@
+function update_dotfiles() {
+    bash ~/.local/dotfiles/bootstrap.sh
+}
+
 # easy extract
 function qextract() {
     if [ ! -f $1 ]; then

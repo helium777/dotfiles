@@ -39,3 +39,13 @@ eza bat fd procs tokei tldr zoxide starship
 ## Update
 
 To update with the latest changes from the repository, just run the bootstrap script again.
+
+For convenience, there is a function `update_dotfiles` in the script that can be used to update the dotfiles:
+
+```bash
+function update_dotfiles() {
+    bash ~/.local/dotfiles/bootstrap.sh
+}
+```
+
+So, you can just run `update_dotfiles` to update the dotfiles.
