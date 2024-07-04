@@ -1,6 +1,6 @@
 # dotfiles
 
-My personal dotfiles for setting up CLI environment for Linux/macOS.
+My personal dotfiles for setting up CLI environment on Linux/macOS.
 
 ## Pre-requisites
 
