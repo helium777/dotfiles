@@ -36,6 +36,6 @@ Additionally, the following software will be installed via `cargo`:
 eza bat fd procs tokei tldr zoxide starship
 ```
 
-### Update
+## Update
 
 To update with the latest changes from the repository, just run the bootstrap script again.
