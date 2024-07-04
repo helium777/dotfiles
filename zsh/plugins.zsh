@@ -1,15 +1,6 @@
 # load completions
 autoload -Uz compinit && compinit
 
-# fzf
-source ~/.fzf.zsh
-
-# zoxide
-eval "$(zoxide init zsh)"
-
-# starship
-eval "$(starship init zsh)"
-
 ### plugins managed by zinit
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 source "${ZINIT_HOME}/zinit.zsh"
@@ -27,3 +18,13 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza --icons -1 --color=always $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza --icons -1 --color=always $realpath'
 zstyle ':fzf-tab:complete:z:*' fzf-preview 'eza --icons -1 --color=always $realpath'
+
+### other plugins
+# fzf
+source ~/.fzf.zsh
+
+# zoxide
+eval "$(zoxide init zsh)"
+
+# starship
+eval "$(starship init zsh)"
