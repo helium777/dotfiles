@@ -1,4 +1,5 @@
 # clone into .local/dotfiles
+mkdir -p ~/.local
 cd ~/.local
 [ -d dotfiles ] || git clone https://github.com/helium777/dotfiles.git
 cd dotfiles
