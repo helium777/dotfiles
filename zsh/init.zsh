@@ -6,6 +6,9 @@
 # skip if NO_INIT is set
 [ -n "$NO_INIT" ] && return
 
+# set PATH
+source ~/.local/dotfiles/zsh/path.zsh
+
 # remove duplicates from PATH
 export PATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PATH}))')"
 
