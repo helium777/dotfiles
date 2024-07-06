@@ -24,6 +24,12 @@ To bootstrap the CLI environment, run the following command:
 curl -s https://raw.githubusercontent.com/helium777/dotfiles/main/bootstrap.sh | bash
 ```
 
+A short url is also available:
+
+```bash
+curl -sL https://s.he7.dev/dotfiles | bash
+```
+
 After bootstrapping, the following software will be installed manually:
 
 ```
