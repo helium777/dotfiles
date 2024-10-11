@@ -104,13 +104,13 @@ function install_rust() {
 }
 
 function install_brew() {
-    p "Hint: You need sudo access to install brew or you can install it manually refer to https://docs.brew.sh/Installation#alternative-installs"
+    p "Hint: You need sudo access to install Homebrew or you can install it manually refer to https://docs.brew.sh/Installation#alternative-installs"
 
     if ! check_sudo; then
-        perror "You need sudo access to install brew"
+        perror "You need sudo access to install homebrew"
     fi
 
-    p "Installing ${BRED}brew${NC} using ${BYELLOW}script from official website${NC}"
+    p "Installing ${BRED}homebrew${NC} using ${BYELLOW}script from official website${NC}"
     scroll_output '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
 }
 
@@ -244,12 +244,12 @@ if [[ ${#not_installed[@]} -eq 0 ]]; then
     exit 0
 fi
 
-p "Do you want to install the remaining tools using ${BYELLOW}brew${NC} or ${BYELLOW}cargo${NC}?"
-p "Hint: We will install brew/cargo if they are not installed yet. Note that installing brew requires sudo access."
-p "Enter ${BYELLOW}brew${NC} or ${BYELLOW}cargo${NC}: "
+p "Do you want to install the remaining tools using ${BYELLOW}homebrew${NC} or ${BYELLOW}cargo${NC}?"
+p "Hint: We will install homebrew/cargo if they are not installed yet. Note that installing homebrew requires sudo access."
+p "Enter ${BYELLOW}homebrew${NC} or ${BYELLOW}cargo${NC}: "
 read -r install_method
 case $install_method in
-    brew)
+    homebrew)
         if ! check_command brew; then
             install_brew
         fi

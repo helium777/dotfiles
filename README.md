@@ -4,17 +4,17 @@ My personal dotfiles for setting up CLI environment on Linux/macOS.
 
 ## Pre-requisites
 
-Please install the following packages before running the setup script:
-
-```
-curl git build-essential cmake zsh
-```
-
-Then make sure that `zsh` is the default shell:
+The dotfiles are based on zsh, so you should set zsh as the default shell:
 
 ```bash
 chsh -s $(which zsh)
 ```
+
+Additionally, the following packages may be required through the installation process:
+
+- git
+- curl
+- grep
 
 ## Bootstrap
 
@@ -30,17 +30,7 @@ A short url is also available:
 curl -sL https://s.he7.dev/dotfiles | bash
 ```
 
-After bootstrapping, the following software will be installed manually:
-
-```
-rust zinit fzf
-```
-
-Additionally, the following software will be installed via `cargo`:
-
-```
-eza bat fd procs tokei tldr zoxide starship
-```
+Then, follow the instructions in the script to install necessary packages and complete the bootstrap process. (See [Notes](#notes) for more details)
 
 ## Update
 
@@ -54,4 +44,13 @@ function update_dotfiles() {
 }
 ```
 
-So, you can just run `update_dotfiles` to update the dotfiles.
+## Notes
+
+- For optimal setup, choose the appropriate installation method in the script:
+  - If you have sudo privileges, select Homebrew (the script will install it if not present).
+  - Without sudo privileges, select Cargo (the script will install it if not present).
+  - Alternatively, you can install Homebrew with a custom prefix and select Homebrew in the script.
+- Installing via Cargo or custom-prefix Homebrew involves compiling from source, which can be time-consuming and may encounter environment-specific issues.
+- Some packages have additional dependencies (e.g., starship via Cargo requires cmake) that may need manual installation.
+- If compilation fails due to missing build tools, try installing the `build-essential` package.
+- If the script cannot resolve issues, manually install required packages using alternative package managers or by compiling from source.
