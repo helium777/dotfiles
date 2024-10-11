@@ -229,8 +229,8 @@ done
 # ignore some packages
 p "Enter space-separated packages to ignore (or press Enter to skip this step): "
 read -r ignore_input
-IFS=' ' read -ra.ignored_pkgs <<< "$ignore_input"
-for pkg in "$.ignored_pkgs[@]}"; do
+IFS=' ' read -ra ignored_pkgs <<< "$ignore_input"
+for pkg in "${ignored_pkgs[@]}"; do
     if [[ " ${pkgs[@]} " =~ " $pkg " ]]; then
         ignore_package $pkg
         not_installed=(${not_installed[@]/$pkg})
