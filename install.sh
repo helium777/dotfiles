@@ -124,7 +124,7 @@ function install_zinit() {
 
 function install_fzf() {
     p "Installing ${BRED}fzf${NC} using ${BYELLOW}git${NC}"
-    scroll_output "git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --key-bindings --completion --no-update-rc"
+    scroll_output "git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --key-bindings --completion"
 }
 
 function ignore_package() {
