@@ -17,50 +17,6 @@ function perror() {
     exit 1
 }
 
-function scroll_output() {
-    local cmd="$1"
-    local lines=${2:-10}
-    local exit_code=0
-    local temp_file=$(mktemp)
-
-    tput sc
-
-    eval "$cmd" 2>&1 | tee "$temp_file" | {
-        local buffer=()
-        while IFS= read -r line || [[ -n "$line" ]]; do
-            buffer+=("$line")
-
-            if ((${#buffer[@]} > lines)); then
-                buffer=("${buffer[@]:1}")
-            fi
-
-            tput rc
-            tput ed
-
-            tput dim
-            for output_line in "${buffer[@]}"; do
-                echo -e "$output_line"
-            done
-            tput sgr0
-        done
-
-        tput rc
-        tput ed
-    }
-
-    exit_code=${PIPESTATUS[0]}
-
-    if [[ $exit_code -ne 0 ]]; then
-        tput dim
-        cat "$temp_file"
-        tput sgr0
-    fi
-
-    rm -f "$temp_file"
-
-    return $exit_code
-}
-
 function check_command() {
     local cmd="$1"
 
@@ -88,19 +44,19 @@ function cargo_install() {
     esac
 
     p "Installing ${BRED}${package}${NC} using ${BYELLOW}cargo${NC}"
-    scroll_output "cargo install $package"
+    cargo install $package
 }
 
 function brew_install() {
     local package="$1"
 
     p "Installing ${BRED}${package}${NC} using ${BYELLOW}brew${NC}"
-    scroll_output "brew install $package"
+    brew install $package
 }
 
 function install_rust() {
     p "Installing ${BRED}rust${NC} using ${BYELLOW}script from official website${NC}"
-    scroll_output "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 }
 
 function install_brew() {
@@ -119,12 +75,13 @@ function install_zinit() {
 
     p "Installing ${BRED}zinit${NC} using ${BYELLOW}git${NC}"
     mkdir -p "$(dirname $zinit_home)"
-    scroll_output "git clone https://github.com/zdharma-continuum/zinit.git $zinit_home"
+    git clone https://github.com/zdharma-continuum/zinit.git $zinit_home
 }
 
 function install_fzf() {
     p "Installing ${BRED}fzf${NC} using ${BYELLOW}git${NC}"
-    scroll_output "git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --key-bindings --completion"
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install --key-bindings --completion
 }
 
 function ignore_package() {
