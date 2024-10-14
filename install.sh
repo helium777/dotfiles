@@ -88,7 +88,7 @@ function install_zinit() {
 function install_fzf() {
     p "Installing ${BRED}fzf${NC} using ${BYELLOW}git${NC}"
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install --key-bindings --completion
+    ~/.fzf/install --key-bindings --completion --update-rc
 }
 
 function ignore_package() {
@@ -129,9 +129,6 @@ if ! check_zinit; then
 fi
 if ! check_command fzf; then
     install_fzf
-fi
-if ! check_zinit || ! check_command fzf; then
-    perror "Something went wrong while installing zinit or fzf"
 fi
 
 # --- check/install other tools ---
