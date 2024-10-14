@@ -67,7 +67,7 @@ function install_brew() {
     fi
 
     p "Installing ${BRED}homebrew${NC} using ${BYELLOW}script from official website${NC}"
-    scroll_output '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
 
 function install_zinit() {
