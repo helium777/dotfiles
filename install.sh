@@ -57,6 +57,10 @@ function brew_install() {
 function install_rust() {
     p "Installing ${BRED}rust${NC} using ${BYELLOW}script from official website${NC}"
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+    p "You need to restart your shell to use cargo!"
+    p "After restarting, run this script again to install other tools"
+    exit 0
 }
 
 function install_brew() {
@@ -68,6 +72,9 @@ function install_brew() {
 
     p "Installing ${BRED}homebrew${NC} using ${BYELLOW}script from official website${NC}"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    p "You need to restart your shell to use brew!"
+    p "After restarting, run this script again to install other tools"
 }
 
 function install_zinit() {
