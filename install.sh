@@ -29,6 +29,10 @@ function check_zinit() {
     [[ -d $ZINIT_HOME ]]
 }
 
+function check_fzf() {
+    [[ -d ~/.fzf ]]
+}
+
 function check_sudo() {
     p "Checking sudo access (you may be prompted for your password)..."
     return $(sudo -v)
@@ -114,6 +118,7 @@ prerequisites=(
     git
     curl
     grep
+    perl
 )
 for cmd in ${prerequisites[@]}; do
     if ! check_command $cmd; then
@@ -125,7 +130,7 @@ done
 if ! check_zinit; then
     install_zinit
 fi
-if ! check_command fzf; then
+if ! check_fzf; then
     install_fzf
 fi
 
