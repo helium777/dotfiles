@@ -6,6 +6,8 @@ BRED='\033[1;31m'
 BYELLOW='\033[1;33m'
 NC='\033[0m'
 
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+
 function p() {
     printf "==> $1\n"
 }
@@ -24,9 +26,7 @@ function check_command() {
 }
 
 function check_zinit() {
-    local zinit_home="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-
-    [[ -d $zinit_home ]]
+    [[ -d $ZINIT_HOME ]]
 }
 
 function check_sudo() {
@@ -78,17 +78,15 @@ function install_brew() {
 }
 
 function install_zinit() {
-    local zinit_home="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-
     p "Installing ${BRED}zinit${NC} using ${BYELLOW}git${NC}"
-    mkdir -p "$(dirname $zinit_home)"
-    git clone https://github.com/zdharma-continuum/zinit.git $zinit_home
+    mkdir -p "$(dirname $ZINIT_HOME)"
+    git clone https://github.com/zdharma-continuum/zinit.git $ZINIT_HOME
 }
 
 function install_fzf() {
     p "Installing ${BRED}fzf${NC} using ${BYELLOW}git${NC}"
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install --key-bindings --completion --update-rc
+    ~/.fzf/install --no-key-bindings --no-completion --no-update-rc
 }
 
 function ignore_package() {

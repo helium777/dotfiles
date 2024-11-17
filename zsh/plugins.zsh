@@ -21,7 +21,7 @@ zstyle ':fzf-tab:complete:z:*' fzf-preview 'eza --icons -1 --color=always $realp
 
 ### other plugins
 # fzf
-source ~/.fzf.zsh
+source <(fzf --zsh)
 
 # zoxide
 eval "$(zoxide init zsh)"
