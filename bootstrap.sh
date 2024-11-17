@@ -10,7 +10,6 @@ git pull
 # install nessessary packages
 bash install.sh
 
-# source init.zsh in .zshrc
-if ! grep -qxF "source ~/.local/dotfiles/zsh/init.zsh" ~/.zshrc; then
-    echo -e "\nsource ~/.local/dotfiles/zsh/init.zsh" >> ~/.zshrc
-fi
+# source init.zsh in the end of .zshrc
+perl -i -ne 'print unless /source ~\/.local\/dotfiles\/zsh\/init.zsh/' ~/.zshrc
+echo -e "\nsource ~/.local/dotfiles/zsh/init.zsh" >> ~/.zshrc
