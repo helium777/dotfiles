@@ -99,8 +99,3 @@ function qlocalip() {
 
     echo "$ip"
 }
-
-# change cuda visible devices
-function c() {
-    export CUDA_VISIBLE_DEVICES=$1
-}
