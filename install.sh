@@ -113,19 +113,6 @@ function script_error_handler() {
 
 trap 'script_error_handler $LINENO' ERR
 
-# --- check prerequisites ---
-prerequisites=(
-    git
-    curl
-    grep
-    perl
-)
-for cmd in ${prerequisites[@]}; do
-    if ! check_command $cmd; then
-        perror "${cmd} is not installed"
-    fi
-done
-
 # --- check/install zinit and fzf ---
 if ! check_zinit; then
     install_zinit
