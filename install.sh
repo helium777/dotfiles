@@ -7,6 +7,7 @@ BYELLOW='\033[1;33m'
 NC='\033[0m'
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+CARGO_HOME="${HOME}/.cargo/bin"
 
 function p() {
     printf "==> $1\n"
@@ -48,7 +49,7 @@ function cargo_install() {
     esac
 
     p "Installing ${BRED}${package}${NC} using ${BYELLOW}cargo${NC}"
-    cargo install $package
+    ${CARGO_HOME}/cargo install $package
 }
 
 function brew_install() {
@@ -60,11 +61,7 @@ function brew_install() {
 
 function install_rust() {
     p "Installing ${BRED}rust${NC} using ${BYELLOW}script from official website${NC}"
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-
-    p "You need to restart your shell to use cargo!"
-    p "After restarting, run this script again to install other tools"
-    exit 0
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
 }
 
 function install_brew() {
@@ -77,8 +74,10 @@ function install_brew() {
     p "Installing ${BRED}homebrew${NC} using ${BYELLOW}script from official website${NC}"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-    p "You need to restart your shell to use brew!"
-    p "After restarting, run this script again to install other tools"
+    p "Following the instructions above to add Homebrew to your PATH then restart the shell."
+    p "After that, you can run this script again to install the tools."
+    
+    exit 0
 }
 
 function install_zinit() {
@@ -123,79 +122,42 @@ fi
 
 # --- check/install other tools ---
 pkgs=(
-    "eza:required"
-    "starship:required"
-    "bat:optional"
-    "fd:optional"
-    "procs:optional"
-    "tokei:optional"
-    "tldr:optional"
-    "zoxide:optional"
-    "dust:optional"
+    "eza"
+    "bat"
+    "fd"
+    "procs"
+    "tokei"
+    "tldr"
+    "zoxide"
+    "dust"
 )
 installed=()
 not_installed=()
-ignored=()
 
-if [[ ! -f ~/.local/dotfiles/.ignored_pkgs ]]; then
-    touch ~/.local/dotfiles/.ignored_pkgs
-fi
-
-for pkg_info in "${pkgs[@]}"; do
-    IFS=':' read -r pkg status <<< "$pkg_info"
+for pkg in "${pkgs[@]}"; do
     if check_command "$pkg"; then
         installed+=("$pkg")
-    elif is_ignored "$pkg"; then
-        ignored+=("$pkg")
     else
         not_installed+=("$pkg")
     fi
 done
 
-# if all tools are installed/ignored, exit
+# if all tools are installed, exit
 if [[ ${#not_installed[@]} -eq 0 ]]; then
     exit 0
 fi
 
 p "There are some tools that are not installed yet:"
-for pkg_info in "${pkgs[@]}"; do
-    IFS=':' read -r pkg status <<< "$pkg_info"
-
+for pkg in "${pkgs[@]}"; do
     install_status="${BRED}not installed${NC}"
     if [[ " ${installed[*]} " =~ " $pkg " ]]; then
         install_status="${BGREEN}installed${NC}"
-    elif [[ " ${ignored[*]} " =~ " $pkg " ]]; then
-        install_status="${BYELLOW}ignored${NC}"
     fi
 
-    if [[ $status == "required" ]]; then
-        status="${BYELLOW}required${NC}"
-    elif [[ $status == "optional" ]]; then
-        status="${BGREEN}optional${NC}"
-    fi
-
-    printf "%-15b | %-24b | %b\n" "$pkg" "$install_status" "$status"
+    printf "  - ${pkg}: ${install_status}\n"
 done
 
-# ignore some packages
-p "Enter space-separated packages to ignore (or press Enter to skip this step): "
-read -r ignore_input
-IFS=' ' read -ra ignored_pkgs <<< "$ignore_input"
-for pkg in "${ignored_pkgs[@]}"; do
-    if [[ " ${pkgs[@]} " =~ " $pkg " ]]; then
-        ignore_package $pkg
-        not_installed=(${not_installed[@]/$pkg})
-    else
-        p "${BYELLOW}Warning:${NC} ${pkg} is not a valid package name and will be skipped"
-    fi
-done
-
-# if all tools are installed/ignored, exit
-if [[ ${#not_installed[@]} -eq 0 ]]; then
-    exit 0
-fi
-
-p "Do you want to install the remaining tools using ${BYELLOW}homebrew${NC} or ${BYELLOW}cargo${NC}?"
+p "Do you want to install the tools using ${BYELLOW}homebrew${NC} or ${BYELLOW}cargo${NC}?"
 p "Hint: We will install homebrew/cargo if they are not installed yet. Note that installing homebrew requires sudo access."
 p "Enter ${BYELLOW}homebrew${NC} or ${BYELLOW}cargo${NC}: "
 read -r install_method
