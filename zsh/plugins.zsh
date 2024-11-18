@@ -10,6 +10,10 @@ zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
 zinit light zdharma-continuum/fast-syntax-highlighting
 
+# pure prompt
+zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
+zinit light sindresorhus/pure
+
 # completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' menu no
@@ -25,6 +29,3 @@ source <(fzf --zsh)
 
 # zoxide
 eval "$(zoxide init zsh)"
-
-# starship
-eval "$(starship init zsh)"
