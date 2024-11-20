@@ -51,21 +51,38 @@ function qcompress() {
 
 # get current host related info
 function qinfo() {
-    local RED="\033[1;31m"
-    local YELLOW="\033[1;33m"
-    local NC="\033[0m"
+    case $(uname) in
+        Darwin|*BSD)
+            local OS_TYPE="macos"
+            local OS_INFO="$(sw_vers -productName) $(sw_vers -productVersion) $(uname -m)"
+            local MEM_USAGE=$(top -l 1 -n 0 | grep PhysMem | cut -d' ' -f2- | tr -d '.')
+            local CPU_USAGE=$(top -l 1 -n 0 | grep 'CPU usage' | cut -d' ' -f3-)
+            local CPU_CORES=$(sysctl -n hw.ncpu)
+            local SWAP_USAGE=$(sysctl -n vm.swapusage | awk '{print $6 " / " $3}')
+        ;;
+        Linux)
+            local OS_TYPE="linux"
+            local OS_INFO="$(cat /etc/os-release | awk -F= '/PRETTY_NAME/ {print $2}' | tr -d '"') $(uname -m)"
+            local MEM_USAGE=$(free -h | awk '/Mem:/ {print $3 " / " $2}')
+            local CPU_USAGE=$(top -bn1 | grep 'Cpu(s)' | cut -d' ' -f2-)
+            local CPU_CORES=$(nproc)
+            local SWAP_USAGE=$(free -h | awk '/Swap:/ {print $3 " / " $2}')
+        ;;
+        *)
+            print "Unknown OS"
+            return 1
+        ;;
+    esac
 
-    printf "You are logged on ${YELLOW}$HOST${NC}\n"
-    printf "${RED}Additionnal information:$NC\n"
-    uname -a
-    printf "${RED}Users logged on:$NC\n"
-    w -h
-    printf "${RED}Current date:$NC\n"
-    date
-    printf "${RED}Machine stats:$NC\n"
-    uptime
-    printf "${RED}Public IP Address:$NC\n"
-    qip
+    print "$fg_bold[green]OS:$reset_color $OS_INFO"
+    print "$fg_bold[green]Kernel:$reset_color $(uname -s) $(uname -r)"
+    print "$fg_bold[green]Hostname:$reset_color $(hostname)"
+    print "$fg_bold[green]Uptime:$reset_color $(uptime | sed 's/.*up \(.*\),.* user.*/\1/')"
+    print "$fg_bold[green]CPU:$reset_color $CPU_USAGE"
+    print "$fg_bold[green]Load ($CPU_CORES cores):$reset_color $(uptime | awk -F'averages: ' '{print $2}')"
+    print "$fg_bold[green]Memory:$reset_color $MEM_USAGE"
+    print "$fg_bold[green]Swap:$reset_color $SWAP_USAGE"
+    print "$fg_bold[green]Date:$reset_color $(date '+%Y-%m-%d %H:%M:%S %Z (UTC%z)')"
 }
 
 # get public IP address
@@ -97,5 +114,21 @@ function qlocalip() {
             ;;
     esac
 
-    echo "$ip"
+    echo "$ip" | sort
+}
+
+# get network info
+function qnet() {
+    print "$fg_bold[green]Local IP addresses:$reset_color"
+    qlocalip
+
+    print
+
+    print "$fg_bold[green]Public IP address:$reset_color"
+    qip
+
+    print
+
+    print "$fg_bold[green]DNS servers:$reset_color"
+    cat /etc/resolv.conf | grep nameserver | awk '{print $2}'
 }
