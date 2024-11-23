@@ -30,10 +30,6 @@ function check_zinit() {
     [[ -d $ZINIT_HOME ]]
 }
 
-function check_fzf() {
-    [[ -d ~/.fzf ]]
-}
-
 function check_sudo() {
     p "Checking sudo access (you may be prompted for your password)..."
     return $(sudo -v)
@@ -43,7 +39,10 @@ function cargo_install() {
     local package="$1"
 
     case "$package" in
+    dua) package="dua-cli" ;;
     fd) package="fd-find" ;;
+    rg) package="ripgrep" ;;
+    tldr) package="tealdeer" ;;
     esac
 
     p "Installing ${BRED}${package}${NC} using ${BYELLOW}cargo${NC}"
@@ -52,6 +51,12 @@ function cargo_install() {
 
 function brew_install() {
     local package="$1"
+
+    case "$package" in
+    dua) package="dua-cli" ;;
+    rg) package="ripgrep" ;;
+    tldr) package="tealdeer" ;;
+    esac
 
     p "Installing ${BRED}${package}${NC} using ${BYELLOW}brew${NC}"
     brew install $package
@@ -89,38 +94,28 @@ function install_zinit() {
     git clone https://github.com/zdharma-continuum/zinit.git $ZINIT_HOME
 }
 
-function install_fzf() {
-    p "Installing ${BRED}fzf${NC} using ${BYELLOW}git${NC}"
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install --no-key-bindings --no-completion --no-update-rc --no-bash --no-zsh --no-fish
-}
-
 function script_error_handler() {
     perror "An error occurred at line $1"
 }
 
 trap 'script_error_handler $LINENO' ERR
 
-# --- check/install zinit and fzf ---
+# --- check/install zinit ---
 if ! check_zinit; then
     install_zinit
-fi
-if ! check_fzf; then
-    install_fzf
 fi
 
 # --- check/install other tools ---
 pkgs=(
     "bat"
-    "dua-cli"
+    "dua"
     "eza"
     "fd"
     "ouch"
     "procs"
-    "ripgrep"
-    "tealdeer"
+    "rg"
+    "tldr"
     "tokei"
-    "zoxide"
 )
 installed=()
 not_installed=()

@@ -33,11 +33,3 @@ zinit ice wait as"command" from"gh-r" lucid \
     atclone"./fzf --zsh > init.zsh" \
     atpull"%atclone" src"init.zsh" nocompile"!"
 zinit light junegunn/fzf
-
-# [install] eza
-zinit ice as"command" from"gh-r"
-zinit light eza-community/eza
-
-# [install] bat
-zinit ice as"command" from"gh-r" mv"bat* -> bat" pick"bat/bat"
-zinit light sharkdp/bat
