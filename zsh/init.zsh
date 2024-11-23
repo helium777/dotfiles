@@ -16,3 +16,4 @@ source ~/.local/dotfiles/zsh/history.zsh
 source ~/.local/dotfiles/zsh/functions.zsh
 source ~/.local/dotfiles/zsh/aliases.zsh
 source ~/.local/dotfiles/zsh/plugins.zsh
+source ~/.local/dotfiles/zsh/styling.zsh
