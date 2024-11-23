@@ -29,3 +29,7 @@ source <(fzf --zsh)
 
 # zoxide
 eval "$(zoxide init zsh)"
+
+### other settings
+# colorizing man pages
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
