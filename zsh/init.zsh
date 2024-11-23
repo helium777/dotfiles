@@ -1,11 +1,5 @@
 # init script for interactive shell sessions
 
-# skip if not running interactively
-[ -z "$PS1" ] && return
-
-# skip if NO_INIT is set
-[ -n "$NO_INIT" ] && return
-
 # set PATH
 source ~/.local/dotfiles/zsh/path.zsh
 
