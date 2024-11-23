@@ -23,7 +23,7 @@ function perror() {
 function check_command() {
     local cmd="$1"
 
-    return $(which $cmd > /dev/null)
+    return $(which $cmd >/dev/null)
 }
 
 function check_zinit() {
@@ -43,13 +43,11 @@ function cargo_install() {
     local package="$1"
 
     case "$package" in
-        fd) package="fd-find" ;;
-        tldr) package="tlrc" ;;
-        dust) package="du-dust" ;;
+    fd) package="fd-find" ;;
     esac
 
     p "Installing ${BRED}${package}${NC} using ${BYELLOW}cargo${NC}"
-    ${CARGO_HOME}/cargo install $package
+    ${CARGO_HOME}/cargo binstall --no-confirm $package
 }
 
 function brew_install() {
@@ -64,6 +62,11 @@ function install_rust() {
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
 }
 
+function install_cargo_binstall() {
+    p "Installing ${BRED}cargo-binstall${NC} using ${BYELLOW}script from official website${NC}"
+    curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+}
+
 function install_brew() {
     p "Hint: You need sudo access to install Homebrew or you can install it manually refer to https://docs.brew.sh/Installation#alternative-installs"
 
@@ -76,7 +79,7 @@ function install_brew() {
 
     p "Following the instructions above to add Homebrew to your PATH then restart the shell."
     p "After that, you can run this script again to install the tools."
-    
+
     exit 0
 }
 
@@ -90,20 +93,6 @@ function install_fzf() {
     p "Installing ${BRED}fzf${NC} using ${BYELLOW}git${NC}"
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
     ~/.fzf/install --no-key-bindings --no-completion --no-update-rc --no-bash --no-zsh --no-fish
-}
-
-function ignore_package() {
-    local package="$1"
-    local ignore_file=~/.local/dotfiles/.ignored_pkgs
-    if ! grep -qxF $package $ignore_file; then
-        echo $package >> $ignore_file
-    fi
-}
-
-function is_ignored() {
-    local package="$1"
-    local ignore_file=~/.local/dotfiles/.ignored_pkgs
-    return $(grep -qxF $package $ignore_file)
 }
 
 function script_error_handler() {
@@ -122,14 +111,16 @@ fi
 
 # --- check/install other tools ---
 pkgs=(
-    "eza"
     "bat"
+    "dua-cli"
+    "eza"
     "fd"
+    "ouch"
     "procs"
+    "ripgrep"
+    "tealdeer"
     "tokei"
-    "tldr"
     "zoxide"
-    "dust"
 )
 installed=()
 not_installed=()
@@ -162,21 +153,24 @@ p "Hint: We will install homebrew/cargo if they are not installed yet. Note that
 p "Enter ${BYELLOW}homebrew${NC} or ${BYELLOW}cargo${NC}: "
 read -r install_method
 case $install_method in
-    homebrew)
-        if ! check_command brew; then
-            install_brew
-        fi
-        install_func=brew_install
-        ;;
-    cargo)
-        if ! check_command cargo; then
-            install_rust
-        fi
-        install_func=cargo_install
-        ;;
-    *)
-        perror "Invalid install method"
-        ;;
+homebrew)
+    if ! check_command brew; then
+        install_brew
+    fi
+    install_func=brew_install
+    ;;
+cargo)
+    if ! check_command cargo; then
+        install_rust
+    fi
+    if ! check_command cargo-binstall; then
+        install_cargo_binstall
+    fi
+    install_func=cargo_install
+    ;;
+*)
+    perror "Invalid install method"
+    ;;
 esac
 
 for pkg in "${not_installed[@]}"; do
