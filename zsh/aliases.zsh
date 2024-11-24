@@ -1,3 +1,4 @@
+### aliases for eza
 alias ls="eza"
-alias ll="eza -al --icons --time-style=long-iso --group --binary"
-alias tree="eza --tree --icons"
+alias ll="eza -al --icons --group --binary --time-style=long-iso --group-directories-first"
+alias tree="eza --tree --icons --group-directories-first"
