@@ -2,9 +2,21 @@
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 source "${ZINIT_HOME}/zinit.zsh"
 
-# prompt theme: powerlevel10k
-zinit ice depth"1"
-zinit light romkatv/powerlevel10k
+# prompt theme: pure
+zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
+zinit light sindresorhus/pure
+
+# [install] zoxide & activate it
+zinit ice wait as"command" from"gh-r" lucid \
+    atclone"./zoxide init zsh > init.zsh" \
+    atpull"%atclone" src"init.zsh" nocompile"!" atload"unalias zi"
+zinit light ajeetdsouza/zoxide
+
+# [install] fzf & activate it
+zinit ice wait as"command" from"gh-r" lucid \
+    atclone"./fzf --zsh > init.zsh" \
+    atpull"%atclone" src"init.zsh" nocompile"!"
+zinit light junegunn/fzf
 
 # completion with fzf
 zinit ice wait lucid atinit"zicompinit; zicdreplay"
@@ -21,15 +33,3 @@ zinit light zsh-users/zsh-autosuggestions
 # command completions
 zinit ice wait lucid blockf atpull"zinit creinstall -q ."
 zinit light zsh-users/zsh-completions
-
-# [install] zoxide & activate it
-zinit ice wait as"command" from"gh-r" lucid \
-    atclone"./zoxide init zsh > init.zsh" \
-    atpull"%atclone" src"init.zsh" nocompile"!"
-zinit light ajeetdsouza/zoxide
-
-# [install] fzf & activate it
-zinit ice wait as"command" from"gh-r" lucid \
-    atclone"./fzf --zsh > init.zsh" \
-    atpull"%atclone" src"init.zsh" nocompile"!"
-zinit light junegunn/fzf
