@@ -6,19 +6,21 @@ function update_dotfiles() {
 function qinfo() {
     case $(uname) in
     Darwin | *BSD)
-        local OS_TYPE="macos"
+        local TOP_RESULT=$(top -l 1 -n 0)
+
         local OS_INFO="$(sw_vers -productName) $(sw_vers -productVersion) $(uname -m)"
-        local MEM_USAGE=$(top -l 1 -n 0 | grep PhysMem | cut -d' ' -f2- | tr -d '.')
-        local CPU_USAGE=$(top -l 1 -n 0 | grep 'CPU usage' | cut -d' ' -f3-)
+        local MEM_USAGE=$(echo "$TOP_RESULT" | grep 'PhysMem' | cut -d' ' -f2- | tr -d '.')
+        local CPU_USAGE=$(echo "$TOP_RESULT" | grep 'CPU usage' | cut -d' ' -f3-)
         local CPU_CORES=$(sysctl -n hw.ncpu)
+        local LOAD_AVERAGE=$(uptime | awk -F'averages: ' '{print $2}')
         local SWAP_USAGE=$(sysctl -n vm.swapusage | awk '{print $6 " / " $3}')
         ;;
     Linux)
-        local OS_TYPE="linux"
         local OS_INFO="$(cat /etc/os-release | awk -F= '/PRETTY_NAME/ {print $2}' | tr -d '"') $(uname -m)"
         local MEM_USAGE=$(free -h | awk '/Mem:/ {print $3 " / " $2}')
         local CPU_USAGE=$(top -bn1 | grep 'Cpu(s)' | cut -d' ' -f2-)
         local CPU_CORES=$(nproc)
+        local LOAD_AVERAGE=$(uptime | awk -F'average: ' '{print $2}')
         local SWAP_USAGE=$(free -h | awk '/Swap:/ {print $3 " / " $2}')
         ;;
     *)
@@ -32,7 +34,7 @@ function qinfo() {
     print "$fg_bold[green]Hostname:$reset_color $(hostname)"
     print "$fg_bold[green]Uptime:$reset_color $(uptime | sed 's/.*up \(.*\),.* user.*/\1/')"
     print "$fg_bold[green]CPU:$reset_color $CPU_USAGE"
-    print "$fg_bold[green]Load ($CPU_CORES cores):$reset_color $(uptime | awk -F'averages: ' '{print $2}')"
+    print "$fg_bold[green]Load ($CPU_CORES cores):$reset_color $LOAD_AVERAGE"
     print "$fg_bold[green]Memory:$reset_color $MEM_USAGE"
     print "$fg_bold[green]Swap:$reset_color $SWAP_USAGE"
     print "$fg_bold[green]Date:$reset_color $(date '+%Y-%m-%d %H:%M:%S %Z (UTC%z)')"
