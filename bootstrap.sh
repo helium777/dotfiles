@@ -12,4 +12,4 @@ bash install.sh
 
 # source init.zsh in the end of .zshrc
 perl -i -ne 'print unless /source ~\/.local\/dotfiles\/zsh\/init.zsh/' ~/.zshrc
-echo 'source ~/.local/dotfiles/zsh/init.zsh' >> ~/.zshrc
+perl -i -pe 'print "source ~/.local/dotfiles/zsh/init.zsh\n" if $. == 1' ~/.zshrc
