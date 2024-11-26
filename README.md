@@ -37,3 +37,33 @@ function update_dotfiles() {
     bash ~/.local/dotfiles/bootstrap.sh
 }
 ```
+
+## Uninstall
+
+To completely remove the dotfiles setup, follow these steps:
+
+1. Remove the source line from `.zshrc`:
+    ```bash
+    # Remove this line at the top of .zshrc
+    source ~/.local/dotfiles/zsh/init.zsh
+    ```
+
+2. Delete the dotfiles directory:
+    ```bash
+    rm -rf ~/.local/dotfiles
+    ```
+
+3. Uninstall Zinit:
+    ```bash
+    rm -rf "${ZINIT[HOME_DIR]}"
+    ```
+
+4. Optionally, uninstall Rust if installed:
+    ```bash
+    rustup self uninstall
+    ```
+
+5. Optionally, uninstall Homebrew if installed:
+    ```bash
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
+    ```
