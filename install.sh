@@ -9,6 +9,18 @@ NC='\033[0m'
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 CARGO_HOME="${HOME}/.cargo/bin"
 
+PACKAGES=(
+    "bat"
+    "dua"
+    "eza"
+    "fd"
+    "ouch"
+    "procs"
+    "rg"
+    "tldr"
+    "tokei"
+)
+
 function p() {
     printf "==> $1\n"
 }
@@ -20,7 +32,7 @@ function perror() {
     exit 1
 }
 
-function check_command() {
+function command_exists() {
     local cmd="$1"
 
     return $(which $cmd >/dev/null)
@@ -69,10 +81,10 @@ function install_rust() {
 
 function install_cargo_binstall() {
     p "Installing ${BRED}cargo-binstall${NC} using ${BYELLOW}script from official website${NC}"
-    curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+    curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash >/dev/null 2>&1
 }
 
-function install_brew() {
+function install_homebrew() {
     p "Hint: You need sudo access to install Homebrew or you can install it manually refer to https://docs.brew.sh/Installation#alternative-installs"
 
     if ! check_sudo; then
@@ -94,82 +106,51 @@ function install_zinit() {
     git clone https://github.com/zdharma-continuum/zinit.git $ZINIT_HOME
 }
 
-function script_error_handler() {
-    perror "An error occurred at line $1"
+function main() {
+    # Check/install zinit
+    check_zinit || install_zinit
+
+    # Check/install other tools
+    local not_installed=()
+    for pkg in "${PACKAGES[@]}"; do
+        if ! command_exists "$pkg"; then
+            not_installed+=("$pkg")
+        fi
+    done
+
+    if [[ ${#not_installed[@]} -eq 0 ]]; then
+        exit 0
+    fi
+
+    p "There are some tools that are not installed yet:"
+    for pkg in "${not_installed[@]}"; do
+        printf "  - ${pkg}\n"
+    done
+
+    p "Do you want to install the tools using ${BYELLOW}homebrew${NC} or ${BYELLOW}cargo${NC}?"
+    p "Hint: We will install homebrew/cargo if they are not installed yet. Note that installing homebrew requires sudo access."
+    p "Enter your choice (default: cargo):"
+    read -r install_method
+    [[ -z "$install_method" ]] && install_method="cargo"
+    if [[ "$install_method" == "homebrew" ]]; then
+        command_exists brew || install_homebrew
+        for pkg in "${not_installed[@]}"; do
+            brew_install "$pkg"
+        done
+    elif [[ "$install_method" == "cargo" ]]; then
+        command_exists cargo || install_rust
+        command_exists cargo-binstall || install_cargo_binstall
+        for pkg in "${not_installed[@]}"; do
+            cargo_install "$pkg"
+        done
+    else
+        perror "Invalid install method: $install_method"
+    fi
+
+    p "All tools are installed successfully!"
 }
 
-trap 'script_error_handler $LINENO' ERR
+# Error handling
+trap 'perror "An error occurred at line $LINENO"' ERR
 
-# --- check/install zinit ---
-if ! check_zinit; then
-    install_zinit
-fi
-
-# --- check/install other tools ---
-pkgs=(
-    "bat"
-    "dua"
-    "eza"
-    "fd"
-    "ouch"
-    "procs"
-    "rg"
-    "tldr"
-    "tokei"
-)
-installed=()
-not_installed=()
-
-for pkg in "${pkgs[@]}"; do
-    if check_command "$pkg"; then
-        installed+=("$pkg")
-    else
-        not_installed+=("$pkg")
-    fi
-done
-
-# if all tools are installed, exit
-if [[ ${#not_installed[@]} -eq 0 ]]; then
-    exit 0
-fi
-
-p "There are some tools that are not installed yet:"
-for pkg in "${pkgs[@]}"; do
-    install_status="${BRED}not installed${NC}"
-    if [[ " ${installed[*]} " =~ " $pkg " ]]; then
-        install_status="${BGREEN}installed${NC}"
-    fi
-
-    printf "  - ${pkg}: ${install_status}\n"
-done
-
-p "Do you want to install the tools using ${BYELLOW}homebrew${NC} or ${BYELLOW}cargo${NC}?"
-p "Hint: We will install homebrew/cargo if they are not installed yet. Note that installing homebrew requires sudo access."
-p "Enter ${BYELLOW}homebrew${NC} or ${BYELLOW}cargo${NC}: "
-read -r install_method
-case $install_method in
-homebrew)
-    if ! check_command brew; then
-        install_brew
-    fi
-    install_func=brew_install
-    ;;
-cargo)
-    if ! check_command cargo; then
-        install_rust
-    fi
-    if ! check_command cargo-binstall; then
-        install_cargo_binstall
-    fi
-    install_func=cargo_install
-    ;;
-*)
-    perror "Invalid install method"
-    ;;
-esac
-
-for pkg in "${not_installed[@]}"; do
-    $install_func $pkg
-done
-
-p "All tools are installed successfully!"
+main "$@"
