@@ -1,3 +1,5 @@
+set -e
+
 # clone into ~/.local/dotfiles
 mkdir -p ~/.local
 cd ~/.local
