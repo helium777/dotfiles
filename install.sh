@@ -137,11 +137,11 @@ install_lua() {
         $INSTALL_CMD "lua"
     else
         log_info "Installing 'lua(5.4.8)' from source..."
-        local temp_dir
-        temp_dir=$(mktemp -d)
-        # Clean up the temp directory on exit
-        trap 'rm -rf "$temp_dir"' EXIT
         (
+            temp_dir=$(mktemp -d)
+            # Clean up the temp directory on exit
+            trap 'rm -rf "$temp_dir"' EXIT
+
             cd "$temp_dir"
             curl -L -R -O https://www.lua.org/ftp/lua-5.4.8.tar.gz
             tar -xzf lua-5.4.8.tar.gz
