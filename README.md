@@ -39,13 +39,15 @@ You can install them all referring to next section.
 
     Note: You need sudo access to install homebrew. And you need follow the instructions in the 'Next steps' to add Homebrew to your PATH.
 
-2. Install all pre-requisites using script (or you can install them manually):
+2. Restart your shell if you modified `.zshrc`.
+
+3. Install all pre-requisites using script (or you can install them manually):
 
     ```bash
     curl -fsSL https://raw.githubusercontent.com/helium777/dotfiles/main/install.sh | bash
     ```
 
-3. Bootstrap dotfiles into the CLI environment:
+4. Bootstrap dotfiles into the CLI environment:
 
     ```bash
     bash -c "$(curl -fsS https://raw.githubusercontent.com/helium777/dotfiles/main/bootstrap.sh)"
