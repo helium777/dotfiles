@@ -133,8 +133,8 @@ install_lua() {
         log_warn "'lua' is already installed. Skipping."
         return
     fi
-    if [[ "$PKG_MANAGER" == "brew" ]]; then
-        $INSTALL_CMD "lua"
+    if command_exists brew; then
+        brew install lua
     else
         log_info "Installing 'lua(5.4.8)' from source..."
         (
