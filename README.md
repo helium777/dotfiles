@@ -26,7 +26,7 @@ You can install them all referring to next section.
 
     ```bash
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
-    echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.zshrc
+    echo -e '\nexport PATH="$HOME/.cargo/bin:$PATH"' >> ~/.zshrc
 
     curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
     ```

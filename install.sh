@@ -160,6 +160,7 @@ install_lua() {
 # ---
 main() {
     detect_pkg_manager
+    install_lua
     install_packages "${PACKAGES[@]}"
     log_info "Installation complete."
 }
