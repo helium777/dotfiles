@@ -20,9 +20,9 @@ You can install them all referring to next section.
 
 ## Install
 
-1. Install a package manager for convenience. Recommend cargo for Linux/macOS, and brew for macOS.
+1. Install a package manager for convenience. Recommend Cargo for Linux/macOS, and Homebrew for macOS.
 
-    a. Install cargo and cargo-binstall:
+    a. Install Cargo and cargo-binstall:
 
     ```bash
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
@@ -31,13 +31,13 @@ You can install them all referring to next section.
     curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
     ```
 
-    b. Install brew:
+    b. Install Homebrew:
 
     ```bash
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     ```
 
-    Note: You need sudo access to install homebrew. And you need follow the instructions in the 'Next steps' to add Homebrew to your PATH.
+    Note: You need sudo access to install Homebrew. And you need follow the instructions in the 'Next steps' to add Homebrew to your PATH.
 
 2. Restart your shell if you modified `.zshrc`.
 
@@ -50,7 +50,7 @@ You can install them all referring to next section.
 4. Bootstrap dotfiles into the CLI environment:
 
     ```bash
-    bash -c "$(curl -fsS https://raw.githubusercontent.com/helium777/dotfiles/main/bootstrap.sh)"
+    curl -fsSL https://raw.githubusercontent.com/helium777/dotfiles/main/bootstrap.sh | bash
     ```
 
 ## Update
