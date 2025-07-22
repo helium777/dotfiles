@@ -2,6 +2,7 @@
 set -euo pipefail
 
 command_exists() {
+    PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
     command -v "$1" >/dev/null
 }
 
