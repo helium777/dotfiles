@@ -1,14 +1,14 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-BGREEN='\033[1;32m'
-BRED='\033[1;31m'
-BYELLOW='\033[1;33m'
-NC='\033[0m'
+# ---
+# GLOBAL VARIABLES AND CONSTANTS
+# ---
+# Temporarily add ~/.local/bin to PATH
+PATH="$HOME/.local/bin:$PATH"
 
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-CARGO_HOME="${HOME}/.cargo/bin"
-
+# List of packages to manage.
+# Note: These are the command names. They may differ from the package names.
 PACKAGES=(
     "bat"
     "dua"
@@ -21,136 +21,147 @@ PACKAGES=(
     "tokei"
 )
 
-function p() {
-    printf "==> $1\n"
+# Color definitions for better output
+BRED='\033[1;31m'
+BGREEN='\033[1;32m'
+BYELLOW='\033[1;33m'
+BBLUE='\033[1;34m'
+NC='\033[0m'
+
+# ---
+# HELPER FUNCTIONS
+# ---
+
+# Logging functions for clear, colored output.
+log_info() {
+    echo -e "${BBLUE}INFO${NC}: $1"
 }
 
-function perror() {
-    printf "========================================\n"
-    printf "${BRED}Error:${NC} $1\n"
-    printf "You should resolve the error and run the script again!\n"
-    exit 1
+log_success() {
+    echo -e "${BGREEN}SUCCESS${NC}: $1"
 }
 
-function command_exists() {
-    local cmd="$1"
-
-    return $(which $cmd >/dev/null)
+log_warn() {
+    echo -e "${BYELLOW}WARN${NC}: $1"
 }
 
-function check_zinit() {
-    [[ -d $ZINIT_HOME ]]
+log_error() {
+    echo -e "${BRED}ERROR${NC}: $1"
 }
 
-function check_sudo() {
-    p "Checking sudo access (you may be prompted for your password)..."
-    return $(sudo -v)
+# Function to check for required commands.
+command_exists() {
+    command -v "$1" &>/dev/null
 }
 
-function cargo_install() {
-    local package="$1"
+# ---
+# CORE LOGIC FUNCTIONS
+# ---
 
-    case "$package" in
-    dua) package="dua-cli" ;;
-    fd) package="fd-find" ;;
-    rg) package="ripgrep" ;;
-    tldr) package="tealdeer" ;;
-    esac
-
-    p "Installing ${BRED}${package}${NC} using ${BYELLOW}cargo${NC}"
-    ${CARGO_HOME}/cargo binstall --no-confirm $package
-}
-
-function brew_install() {
-    local package="$1"
-
-    case "$package" in
-    dua) package="dua-cli" ;;
-    rg) package="ripgrep" ;;
-    tldr) package="tealdeer" ;;
-    esac
-
-    p "Installing ${BRED}${package}${NC} using ${BYELLOW}brew${NC}"
-    brew install $package
-}
-
-function install_rust() {
-    p "Installing ${BRED}rust${NC} using ${BYELLOW}script from official website${NC}"
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
-}
-
-function install_cargo_binstall() {
-    p "Installing ${BRED}cargo-binstall${NC} using ${BYELLOW}script from official website${NC}"
-    curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash >/dev/null 2>&1
-}
-
-function install_homebrew() {
-    p "Hint: You need sudo access to install Homebrew or you can install it manually refer to https://docs.brew.sh/Installation#alternative-installs"
-
-    if ! check_sudo; then
-        perror "You need sudo access to install homebrew"
-    fi
-
-    p "Installing ${BRED}homebrew${NC} using ${BYELLOW}script from official website${NC}"
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-    p "Following the instructions above to add Homebrew to your PATH then restart the shell."
-    p "After that, you can run this script again to install the tools."
-
-    exit 0
-}
-
-function install_zinit() {
-    p "Installing ${BRED}zinit${NC} using ${BYELLOW}git${NC}"
-    mkdir -p "$(dirname $ZINIT_HOME)"
-    git clone https://github.com/zdharma-continuum/zinit.git $ZINIT_HOME
-}
-
-function main() {
-    # Check/install zinit
-    check_zinit || install_zinit
-
-    # Check/install other tools
-    local not_installed=()
-    for pkg in "${PACKAGES[@]}"; do
-        if ! command_exists "$pkg"; then
-            not_installed+=("$pkg")
-        fi
-    done
-
-    if [[ ${#not_installed[@]} -eq 0 ]]; then
-        exit 0
-    fi
-
-    p "There are some tools that are not installed yet:"
-    for pkg in "${not_installed[@]}"; do
-        printf "  - ${pkg}\n"
-    done
-
-    p "Do you want to install the tools using ${BYELLOW}homebrew${NC} or ${BYELLOW}cargo${NC}?"
-    p "Hint: We will install homebrew/cargo if they are not installed yet. Note that installing homebrew requires sudo access."
-    p "Enter your choice (default: cargo):"
-    read -r install_method
-    [[ -z "$install_method" ]] && install_method="cargo"
-    if [[ "$install_method" == "homebrew" ]]; then
-        command_exists brew || install_homebrew
-        for pkg in "${not_installed[@]}"; do
-            brew_install "$pkg"
-        done
-    elif [[ "$install_method" == "cargo" ]]; then
-        command_exists cargo || install_rust
-        command_exists cargo-binstall || install_cargo_binstall
-        for pkg in "${not_installed[@]}"; do
-            cargo_install "$pkg"
-        done
+# Detect the package manager.
+detect_pkg_manager() {
+    if command_exists cargo-binstall; then
+        PKG_MANAGER="cargo"
+        INSTALL_CMD="cargo-binstall --no-confirm"
+    elif command_exists brew; then
+        PKG_MANAGER="brew"
+        INSTALL_CMD="brew install"
     else
-        perror "Invalid install method: $install_method"
+        log_error "No supported package manager found (cargo-binstall, brew). Install one of them first."
+        exit 1
     fi
-
-    p "All tools are installed successfully!"
+    log_info "Detected package manager: ${BGREEN}${PKG_MANAGER}${NC}"
 }
 
-# Error handling
-trap 'perror "An error occurred at line $LINENO"' ERR
+# Map common command names to their package names which can differ.
+get_package_name() {
+    local cmd_name=$1
+    case "$PKG_MANAGER" in
+    cargo)
+        case "$cmd_name" in
+        dua) echo "dua-cli" ;;
+        fd) echo "fd-find" ;;
+        rg) echo "ripgrep" ;;
+        tldr) echo "tealdeer" ;;
+        *) echo "$cmd_name" ;;
+        esac
+        ;;
+    brew)
+        case "$cmd_name" in
+        dua) echo "dua-cli" ;;
+        rg) echo "ripgrep" ;;
+        tldr) echo "tealdeer" ;;
+        *) echo "$cmd_name" ;;
+        esac
+        ;;
+    *)
+        log_error "Unsupported package manager: $PKG_MANAGER"
+        exit 1
+        ;;
+    esac
+}
 
-main "$@"
+# The main installation function.
+install_packages() {
+    local packages_to_install=("$@")
+
+    if [ ${#packages_to_install[@]} -eq 0 ]; then
+        log_warn "No packages selected for installation."
+        return
+    fi
+
+    for cmd in "${packages_to_install[@]}"; do
+        if command_exists "$cmd"; then
+            log_warn "Tool '$cmd' is already installed. Skipping."
+            continue
+        fi
+
+        local pkg_name
+        pkg_name=$(get_package_name "$cmd")
+
+        log_info "Installing '$pkg_name'..."
+
+        $INSTALL_CMD "$pkg_name"
+        log_success "'$pkg_name' installed successfully."
+    done
+}
+
+# Install lua
+install_lua() {
+    log_info "Installing 'lua'..."
+    if command_exists lua; then
+        log_warn "'lua' is already installed. Skipping."
+        return
+    fi
+    if [[ "$PKG_MANAGER" == "brew" ]]; then
+        $INSTALL_CMD "lua"
+    else
+        log_info "Installing 'lua(5.4.8)' from source..."
+        local temp_dir
+        temp_dir=$(mktemp -d)
+        # Clean up the temp directory on exit
+        trap 'rm -rf "$temp_dir"' EXIT
+        (
+            cd "$temp_dir"
+            curl -L -R -O https://www.lua.org/ftp/lua-5.4.8.tar.gz
+            tar -xzf lua-5.4.8.tar.gz
+            cd lua-5.4.8
+            make all test
+
+            mkdir -p "$HOME/.local/bin"
+            cp src/lua "$HOME/.local/bin"
+        )
+    fi
+    log_success "'lua' installed successfully."
+}
+
+# ---
+# SCRIPT ENTRY POINT
+# ---
+main() {
+    detect_pkg_manager
+    install_packages "${PACKAGES[@]}"
+    log_info "Installation complete."
+}
+
+main

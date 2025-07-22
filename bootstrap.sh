@@ -1,6 +1,23 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+command_exists() {
+    command -v "$1" >/dev/null
+}
+
+# check if pre-requisites are installed
+PREREQS=(
+    "lua"
+    "eza"
+    "bat"
+)
+for cmd in "${PREREQS[@]}"; do
+    if ! command_exists "$cmd"; then
+        echo "Pre-requisite $cmd is not installed. Please install it and run the script again."
+        exit 1
+    fi
+done
+
 # clone into ~/.local/share/dotfiles
 mkdir -p ~/.local/share
 cd ~/.local/share
@@ -17,3 +34,5 @@ if ! grep -q "source ~/.local/share/dotfiles/zsh/init.zsh" ~/.zshrc; then
     [[ -f ~/.zshrc ]] && cat ~/.zshrc >> "$temp_zshrc"
     mv "$temp_zshrc" ~/.zshrc
 fi
+
+echo "Bootstrapped and updated dotfiles successfully!"

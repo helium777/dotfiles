@@ -1,5 +1,5 @@
 function update_dotfiles() {
-    bash ~/.local/dotfiles/bootstrap.sh
+    bash ~/.local/share/dotfiles/bootstrap.sh
 }
 
 # get current host related info

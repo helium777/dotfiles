@@ -1,16 +1,16 @@
 ### plugins managed by zinit
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 source "${ZINIT_HOME}/zinit.zsh"
 
 # prompt theme: pure
 zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
 zinit light sindresorhus/pure
 
-# [install] zoxide & activate it
-zinit ice wait lucid as"command" from"gh-r" \
-    atclone"./zoxide init zsh > init.zsh" \
-    atpull"%atclone" src"init.zsh" atload"unalias zi"
-zinit light ajeetdsouza/zoxide
+# z.lua
+zinit ice wait lucid
+zinit light skywind3000/z.lua
 
 # [install] fzf & activate it
 zinit ice wait lucid as"command" from"gh-r" \

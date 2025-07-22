@@ -4,37 +4,62 @@ My personal dotfiles for setting up CLI environment on Linux/macOS.
 
 ## Pre-requisites
 
-The dotfiles are based on zsh, so you should set zsh as the default shell:
+- Necessary packages:
 
-```bash
-chsh -s $(which zsh)
-```
+    ```bash
+    lua bat eza
+    ```
 
-## Bootstrap
+- Optional packages:
 
-To bootstrap the CLI environment, run the following command:
+    ```bash
+    dua fd ouch procs rg tldr tokei
+    ```
 
-```bash
-bash -c "$(curl -fsS https://raw.githubusercontent.com/helium777/dotfiles/main/bootstrap.sh)"
-```
+You can install them all referring to next section.
 
-A short url is also available:
+## Install
 
-```bash
-bash -c "$(curl -fsSL https://s.he7.dev/dotfiles)"
-```
+1. Install a package manager for convenience. Recommend cargo for Linux/macOS, and brew for macOS.
 
-Then, follow the instructions in the script to install necessary packages and complete the bootstrap process.
+    a. Install cargo and cargo-binstall:
+
+    ```bash
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+    echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.zshrc
+
+    curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+    ```
+
+    b. Install brew:
+
+    ```bash
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    ```
+
+    Note: You need sudo access to install homebrew. And you need follow the instructions in the 'Next steps' to add Homebrew to your PATH.
+
+2. Install all pre-requisites using script (or you can install them manually):
+
+    ```bash
+    curl -fsSL https://raw.githubusercontent.com/helium777/dotfiles/main/install.sh | bash
+    ```
+
+3. Bootstrap dotfiles into the CLI environment:
+
+    ```bash
+    bash -c "$(curl -fsS https://raw.githubusercontent.com/helium777/dotfiles/main/bootstrap.sh)"
+    ```
 
 ## Update
 
 To update with the latest changes from the repository, just run the bootstrap script again.
 
-For convenience, there is a function `update_dotfiles` in the script that can be used to update the dotfiles:
+For convenience, there is a function `update_dotfiles` configured in the dotfiles that can be used to update:
 
 ```bash
-function update_dotfiles() {
-    bash ~/.local/dotfiles/bootstrap.sh
+update_dotfiles() {
+    bash ~/.local/share/dotfiles/bootstrap.sh
 }
 ```
 
@@ -45,25 +70,28 @@ To completely remove the dotfiles setup, follow these steps:
 1. Remove the source line from `.zshrc`:
     ```bash
     # Remove this line at the top of .zshrc
-    source ~/.local/dotfiles/zsh/init.zsh
+    source ~/.local/share/dotfiles/zsh/init.zsh
     ```
 
 2. Delete the dotfiles directory:
     ```bash
-    rm -rf ~/.local/dotfiles
+    rm -rf ~/.local/share/dotfiles
     ```
 
 3. Uninstall Zinit:
+
     ```bash
     rm -rf "${ZINIT[HOME_DIR]}"
     ```
 
 4. Optionally, uninstall Rust if installed:
+
     ```bash
     rustup self uninstall
     ```
 
 5. Optionally, uninstall Homebrew if installed:
+
     ```bash
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
     ```
