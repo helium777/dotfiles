@@ -4,9 +4,6 @@ set -euo pipefail
 # ---
 # GLOBAL VARIABLES AND CONSTANTS
 # ---
-# Temporarily add ~/.local/bin to PATH
-PATH="$HOME/.local/bin:$PATH"
-
 # List of packages to manage.
 # Note: These are the command names. They may differ from the package names.
 PACKAGES=(
