@@ -26,22 +26,28 @@ You can install them all referring to next section.
 
     ```bash
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
-    echo -e '\nexport PATH="$HOME/.cargo/bin:$PATH"' >> ~/.zshrc
-
     curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
     ```
 
+    Configure PATH:
+
+    ```bash
+    echo -e '\nexport PATH="$HOME/.cargo/bin:$PATH"' >> ~/.zshrc
+    ```
+
     b. Install Homebrew:
+
+    You need sudo access to install Homebrew.
 
     ```bash
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     ```
 
-    Note: You need sudo access to install Homebrew. And you need follow the instructions in the 'Next steps' to add Homebrew to your PATH.
+    After installation, follow the instructions in the 'Next steps' to add Homebrew to your PATH.
 
 2. Restart your shell if you modified `.zshrc`.
 
-3. Install all pre-requisites using script (or you can install them manually):
+3. Install all pre-requisites using script (or you can selectively install them manually):
 
     ```bash
     curl -fsSL https://raw.githubusercontent.com/helium777/dotfiles/main/install.sh | bash
