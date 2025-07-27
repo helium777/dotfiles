@@ -2,6 +2,8 @@
 set -euo pipefail
 
 command_exists() {
+    # we will add ~/.local/bin to PATH later
+    PATH="$HOME/.local/bin:$PATH"
     command -v "$1" >/dev/null
 }
 
