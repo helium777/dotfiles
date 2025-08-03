@@ -48,6 +48,8 @@ log_error() {
 
 # Function to check for required commands.
 command_exists() {
+    # we will add ~/.local/bin to PATH later
+    PATH="$HOME/.local/bin:$PATH"
     command -v "$1" &>/dev/null
 }
 

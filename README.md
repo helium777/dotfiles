@@ -59,6 +59,8 @@ You can install them all referring to next section.
     curl -fsSL https://raw.githubusercontent.com/helium777/dotfiles/main/bootstrap.sh | bash
     ```
 
+5. Restart your shell to make sure the changes take effect.
+
 ## Update
 
 To update with the latest changes from the repository, just run the bootstrap script again.
