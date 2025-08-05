@@ -21,7 +21,7 @@ zinit light junegunn/fzf
 # --- fzf-tab ---
 zinit ice wait lucid atinit"zicompinit; zicdreplay"
 zinit light Aloxaf/fzf-tab
-# enable case-insensitive completion
+# enable case-insensitive completion and fuzzy matching
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'm:{a-z}={A-Z} r:|?=**'
 # force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
 zstyle ':completion:*' menu no
