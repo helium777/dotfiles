@@ -7,13 +7,13 @@ My personal dotfiles for setting up CLI environment on Linux/macOS.
 - Necessary packages:
 
     ```bash
-    lua bat eza
+    lua eza
     ```
 
 - Optional packages:
 
     ```bash
-    dua fd ouch procs rg tldr tokei
+    bat dua fd ouch procs rg tldr tokei
     ```
 
 You can install them all referring to next section.
