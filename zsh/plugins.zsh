@@ -22,7 +22,7 @@ zinit light junegunn/fzf
 zinit ice wait lucid atinit"zicompinit; zicdreplay"
 zinit light Aloxaf/fzf-tab
 # enable case-insensitive completion
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'm:{a-z}={A-Z} r:|?=**'
 # force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
 zstyle ':completion:*' menu no
 # preview directory's content with eza when completing cd
