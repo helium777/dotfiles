@@ -15,7 +15,8 @@ zinit light skywind3000/z.lua
 # --- fzf ---
 zinit ice wait lucid as"command" from"gh-r" \
     atclone"./fzf --zsh > init.zsh" \
-    atpull"%atclone" src"init.zsh"
+    atpull"%atclone" src"init.zsh" \
+    compile"init.zsh"
 zinit light junegunn/fzf
 
 # --- fzf-tab ---
@@ -33,7 +34,7 @@ zinit ice wait lucid
 zinit light zdharma-continuum/fast-syntax-highlighting
 
 # --- zsh-autosuggestions ---
-zinit ice wait lucid atload"!_zsh_autosuggest_start"
+zinit ice wait lucid atload"_zsh_autosuggest_start"
 zinit light zsh-users/zsh-autosuggestions
 # first try the most recent command that follows the same context as current command, then search history, finally fallback to completion
 ZSH_AUTOSUGGEST_STRATEGY=(match_prev_cmd history completion)
