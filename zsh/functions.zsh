@@ -12,8 +12,8 @@ qs() {
     local os_uptime=$(uptime | sed 's/.*up \(.*\),.* user.*/\1/')
     local os_date=$(date '+%Y-%m-%d %H:%M:%S %Z (UTC%z)')
 
-    print "${fg[cyan]}${os_date}${reset_color} ${fg_bold[white]}Up${reset_color} ${fg[cyan]}${os_uptime}${reset_color}"
-    print "${fg_bold[white]}${username}${reset_color}@${fg_bold[white]}${os_hostname}${reset_color} (${fg_bold[white]}${os_type} ${os_kernel}${reset_color})"
+    print "${fg[cyan]}${os_date}${reset_color} ${fg_bold[default]}Up${reset_color} ${fg[cyan]}${os_uptime}${reset_color}"
+    print "${fg_bold[default]}${username}${reset_color}@${fg_bold[default]}${os_hostname}${reset_color} (${fg_bold[default]}${os_type} ${os_kernel}${reset_color})"
 
     if [[ $os_type != "Linux" && $os_type != "Darwin" ]]; then
         print "${fg[yellow]}Unsupported OS${reset_color}"
@@ -41,7 +41,7 @@ qs() {
     esac
 
     print "├─ ${fg_bold[magenta]}CPU${reset_color} (${fg[cyan]}${cores}${reset_color} cores)"
-    print "│  ${fg_bold[white]}Usage:${reset_color} ${fg[cyan]}${cpu_usage}%${reset_color}    ${fg_bold[white]}Load (1/5/15m):${reset_color} ${fg[cyan]}${load}${reset_color}"
+    print "│  ${fg_bold[default]}Usage:${reset_color} ${fg[cyan]}${cpu_usage}%${reset_color}    ${fg_bold[default]}Load (1/5/15m):${reset_color} ${fg[cyan]}${load}${reset_color}"
     print "│"
 
     # --- Memory ---
@@ -55,9 +55,9 @@ qs() {
         read -r total_swap used_swap <<<"$swap_info"
 
         print "├─ ${fg_bold[magenta]}Memory${reset_color}"
-        print "│  ${fg_bold[white]}RAM:${reset_color}  ${fg[cyan]}${used_mem}${reset_color} / ${total_mem}"
+        print "│  ${fg_bold[default]}RAM:${reset_color}  ${fg[cyan]}${used_mem}${reset_color} / ${total_mem}"
 
-        print "│  ${fg_bold[white]}Swap:${reset_color} ${fg[cyan]}${used_swap}${reset_color} / ${total_swap}"
+        print "│  ${fg_bold[default]}Swap:${reset_color} ${fg[cyan]}${used_swap}${reset_color} / ${total_swap}"
         print "│"
         ;;
     Linux)
@@ -75,9 +75,9 @@ qs() {
         local used_swap=$(numfmt --to=iec $used_swap)
 
         print "├─ ${fg_bold[magenta]}Memory${reset_color}"
-        print "│  ${fg_bold[white]}RAM:${reset_color}  ${fg[cyan]}${used_mem}${reset_color} / ${total_mem} (${fg[cyan]}${mem_perc}%${reset_color} used)"
+        print "│  ${fg_bold[default]}RAM:${reset_color}  ${fg[cyan]}${used_mem}${reset_color} / ${total_mem} (${fg[cyan]}${mem_perc}%${reset_color} used)"
 
-        print "│  ${fg_bold[white]}Swap:${reset_color} ${fg[cyan]}${used_swap}${reset_color} / ${total_swap} (${fg[cyan]}${swap_perc}%${reset_color} used)"
+        print "│  ${fg_bold[default]}Swap:${reset_color} ${fg[cyan]}${used_swap}${reset_color} / ${total_swap} (${fg[cyan]}${swap_perc}%${reset_color} used)"
         print "│"
         ;;
     esac
@@ -93,7 +93,7 @@ qs() {
             local -a disk_names=(${(s: :)${iostat_output[1]}})
             local -a data_fields=(${(s: :)${iostat_output[-1]}})
 
-            printf "   ${fg_bold[white]}%-8s %8s %8s %8s${reset_color}\n" "Device" "KB/t" "tps" "MB/s"
+            printf "   ${fg_bold[default]}%-8s %8s %8s %8s${reset_color}\n" "Device" "KB/t" "tps" "MB/s"
 
             local col=1
             for i in {1..$#disk_names}; do
@@ -113,7 +113,7 @@ qs() {
                 }
             ')
 
-            printf "   ${fg_bold[white]}%-8s %8s %10s %10s${reset_color}\n" "Device" "tps" "R (KB/s)" "W (KB/s)"
+            printf "   ${fg_bold[default]}%-8s %8s %10s %10s${reset_color}\n" "Device" "tps" "R (KB/s)" "W (KB/s)"
 
             local device tps rs ws
             while read -r device tps rs ws; do
