@@ -15,8 +15,7 @@ zinit light skywind3000/z.lua
 # --- fzf ---
 zinit ice wait lucid as"command" from"gh-r" \
     atclone"./fzf --zsh > init.zsh" \
-    atpull"%atclone" src"init.zsh" \
-    compile"init.zsh"
+    atpull"%atclone" src"init.zsh"
 zinit light junegunn/fzf
 
 # --- fzf-tab ---
@@ -42,3 +41,7 @@ ZSH_AUTOSUGGEST_STRATEGY=(match_prev_cmd history completion)
 # --- zsh-completions ---
 zinit ice wait lucid blockf atpull"zinit creinstall -q ."
 zinit light zsh-users/zsh-completions
+
+# --- gh ---
+zinit ice as"command" from"gh-r"
+zinit light cli/cli
