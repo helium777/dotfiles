@@ -43,5 +43,5 @@ zinit ice wait lucid blockf atpull"zinit creinstall -q ."
 zinit light zsh-users/zsh-completions
 
 # --- gh ---
-zinit ice as"command" from"gh-r"
+zinit ice as"command" from"gh-r" mv"**/gh -> gh"
 zinit light cli/cli
