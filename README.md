@@ -36,10 +36,10 @@ You can install them all referring to next section.
     exec zsh
     ```
 
-    Install cargo-install-update for convenient binary updates:
+    Install cargo-update for convenient binary updates:
 
     ```bash
-    cargo binstall -y cargo-install-update
+    cargo binstall -y cargo-update
     ```
 
     b. Install Homebrew:
