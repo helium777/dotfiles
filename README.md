@@ -29,10 +29,17 @@ You can install them all referring to next section.
     curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
     ```
 
-    Configure PATH:
+    Configure PATH and restart zsh:
 
     ```bash
     echo -e '\nexport PATH="$HOME/.cargo/bin:$PATH"' >> ~/.zshrc
+    exec zsh
+    ```
+
+    Install cargo-install-update for convenient binary updates:
+
+    ```bash
+    cargo binstall -y cargo-install-update
     ```
 
     b. Install Homebrew:
@@ -43,23 +50,21 @@ You can install them all referring to next section.
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     ```
 
-    After installation, follow the instructions in the 'Next steps' to add Homebrew to your PATH.
+    After installation, follow the instructions in the 'Next steps' to add Homebrew to your PATH and restart zsh using `exec zsh`.
 
-2. Restart your shell if you modified `.zshrc`.
-
-3. Install all pre-requisites using script (or you can selectively install them manually):
+2. Install all pre-requisites using script (or you can selectively install them manually):
 
     ```bash
     curl -fsSL https://raw.githubusercontent.com/helium777/dotfiles/main/install.sh | bash
     ```
 
-4. Bootstrap dotfiles into the CLI environment:
+3. Bootstrap dotfiles into the CLI environment:
 
     ```bash
     curl -fsSL https://raw.githubusercontent.com/helium777/dotfiles/main/bootstrap.sh | bash
     ```
 
-5. Restart your shell to make sure the changes take effect.
+4. Restart your shell by running `exec zsh`.
 
 ## Update
 
