@@ -1,4 +1,4 @@
-function update_dotfiles() {
+update_dotfiles() {
     bash ~/.local/share/dotfiles/bootstrap.sh
 }
 
@@ -127,7 +127,7 @@ qs() {
 }
 
 # get public IP address
-function qip() {
+qip() {
     local ipv4=$(curl -4 ifconfig.co 2>/dev/null)
     local ipv6=$(curl -6 ifconfig.co 2>/dev/null)
     if [ -z $ipv4 ]; then
@@ -142,7 +142,7 @@ function qip() {
 }
 
 # get all local IP addresses
-function qlocalip() {
+qlocalip() {
     case $(uname) in
     Darwin)
         local ip=$(ifconfig | grep -E 'inet.[0-9]' | grep -v '127.0.0.1' | awk '{print $2}')
@@ -159,7 +159,7 @@ function qlocalip() {
 }
 
 # get network info
-function qnet() {
+qnet() {
     print "$fg_bold[green]Local IP addresses:$reset_color"
     qlocalip
 
