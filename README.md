@@ -1,112 +1,81 @@
 # dotfiles
 
-My personal dotfiles for setting up CLI environment on Linux/macOS.
+My personal dotfiles for a modern CLI environment on Linux and macOS.
 
-## Pre-requisites
+## Prerequisite
 
-- Necessary packages:
-
-    ```bash
-    lua eza
-    ```
-
-- Optional packages:
-
-    ```bash
-    bat dua fd ouch procs rg tldr tokei
-    ```
-
-You can install them all referring to next section.
+- Zsh is installed and set as your login shell.
 
 ## Install
 
-1. Install a package manager for convenience. Recommend Cargo for Linux/macOS, and Homebrew for macOS.
+1. Install Rust.
 
-    a. Install Cargo and cargo-binstall:
+    We use [Cargo](https://doc.rust-lang.org/cargo/) (Rust's package manager) to install and manage modern CLI tools. This step installs Rust, then adds `cargo-binstall` (for pre-compiled binaries) and `cargo-update` (for convenient binary updates).
 
     ```bash
+    # Install the Rust toolchain
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile=minimal
-    curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-    ```
 
-    Configure PATH and restart zsh:
-
-    ```bash
-    echo -e '\nexport PATH="$HOME/.cargo/bin:$PATH"' >> ~/.zshrc
+    # Add Cargo to your PATH and reload your shell
+    echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.zshrc
     exec zsh
-    ```
 
-    Install cargo-update for convenient binary updates:
-
-    ```bash
+    # Install cargo-binstall and cargo-update
+    curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
     cargo binstall -y cargo-update
     ```
 
-    b. Install Homebrew:
+2. Install CLI tools.
 
-    You need sudo access to install Homebrew.
-
-    ```bash
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    ```
-
-    After installation, follow the instructions in the 'Next steps' to add Homebrew to your PATH and restart zsh using `exec zsh`.
-
-2. Install all pre-requisites using script (or you can selectively install them manually):
+    This script installs a curated set of recommended CLI tools. You may also choose to install specific tools manually if you prefer.
 
     ```bash
     curl -fsSL https://raw.githubusercontent.com/helium777/dotfiles/main/install.sh | bash
     ```
 
-3. Bootstrap dotfiles into the CLI environment:
+3. Bootstrap dotfiles.
+
+    This script clones the dotfiles repository into `~/.local/share/dotfiles` and sources the `init.zsh` file in your `.zshrc` file.
 
     ```bash
     curl -fsSL https://raw.githubusercontent.com/helium777/dotfiles/main/bootstrap.sh | bash
     ```
 
-4. Restart your shell by running `exec zsh`.
+4. Restart your shell.
+
+    To finalize the setup, restart your shell.
+
+    ```bash
+    exec zsh
+    ```
 
 ## Update
 
-To update with the latest changes from the repository, just run the bootstrap script again.
-
-For convenience, there is a function `update_dotfiles` configured in the dotfiles that can be used to update:
+To update the dotfiles to the latest version, simply run the bootstrap script again. An `update_dotfiles` command is also available for convenience after the initial installation.
 
 ```bash
-update_dotfiles() {
-    bash ~/.local/share/dotfiles/bootstrap.sh
-}
+update_dotfiles
 ```
 
 ## Uninstall
 
-To completely remove the dotfiles setup, follow these steps:
+To completely remove the dotfiles setup:
 
-1. Remove the source line from `.zshrc`:
-    ```bash
-    # Remove this line at the top of .zshrc
+1. Edit `~/.zshrc` and remove the following line from the file:
+
+    ```zsh
     source ~/.local/share/dotfiles/zsh/init.zsh
     ```
 
-2. Delete the dotfiles directory:
+2. Delete the dotfiles and Zinit directories:
+
     ```bash
     rm -rf ~/.local/share/dotfiles
-    ```
-
-3. Uninstall Zinit:
-
-    ```bash
     rm -rf "${ZINIT[HOME_DIR]}"
     ```
 
-4. Optionally, uninstall Rust if installed:
+3. Uninstall Rust:
 
     ```bash
     rustup self uninstall
-    ```
-
-5. Optionally, uninstall Homebrew if installed:
-
-    ```bash
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)"
     ```
