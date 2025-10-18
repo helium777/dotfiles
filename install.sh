@@ -11,6 +11,7 @@ PACKAGES=(
     "dua"
     "eza"
     "fd"
+    "just"
     "ouch"
     "procs"
     "rg"
