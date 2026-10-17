@@ -30,7 +30,7 @@ __prompt_preexec() {
 __prompt_precmd() {
   local exit_code=$?
 
-  # 1. duration
+  # duration
   local duration_str=""
   if ((__prompt_timer > 0)); then
     local -i elapsed=$((EPOCHSECONDS - __prompt_timer))
@@ -45,7 +45,7 @@ __prompt_precmd() {
     fi
   fi
 
-  # 2. detect SSH/Docker and root
+  # detect SSH/Docker and root
   local user_host=""
   local is_ssh=0 is_container=0
   [[ -n "$SSH_CONNECTION" || -n "$SSH_CLIENT" || -n "$SSH_TTY" ]] && is_ssh=1
@@ -57,14 +57,7 @@ __prompt_precmd() {
     user_host="%F{244}%n@%m%f "
   fi
 
-  # 3. prompt
-  local symbol
-  if ((EUID == 0)); then
-    symbol="%F{red}❯%f"
-  else
-    symbol="%F{magenta}❯%f"
-  fi
-
+  local symbol="%F{magenta}❯%f"
   local newline=$'\n%{\r%}'
   PROMPT="${newline}%(1j.%F{blue}✦%f .)${user_host}%F{blue}%~%f${duration_str}
 ${symbol} "
