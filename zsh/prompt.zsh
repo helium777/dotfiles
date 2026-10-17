@@ -60,7 +60,7 @@ __prompt_precmd() {
   # 3. prompt
   local symbol
   if ((EUID == 0)); then
-    symbol="%F{red}#%f"
+    symbol="%F{red}❯%f"
   else
     symbol="%F{magenta}❯%f"
   fi
