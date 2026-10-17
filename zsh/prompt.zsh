@@ -52,9 +52,9 @@ __prompt_precmd() {
   [[ -f /.dockerenv || -f /run/.containerenv || -n "$CONTAINER_ID" || -n "$container" ]] && is_container=1
 
   if ((EUID == 0)); then
-    user_host="%F{red}%n%f%F{cyan}@%m%f "
+    user_host="%F{red}%n%f%F{244}@%m%f "
   elif ((is_ssh || is_container)); then
-    user_host="%F{cyan}%n@%m%f "
+    user_host="%F{244}%n@%m%f "
   fi
 
   # 3. prompt
