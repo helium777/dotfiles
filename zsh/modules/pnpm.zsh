@@ -1,2 +1,2 @@
-export PNPM_HOME="$HOME/Library/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 path=("$PNPM_HOME/bin" $path)
