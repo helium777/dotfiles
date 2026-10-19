@@ -3,13 +3,20 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 autoload -Uz add-zsh-hook
 zmodload zsh/datetime
 
-PROMPT2="%F{244}%1_%f%F{244}❯%f "
+PROMPT2="%F{244}%1_%f%F{magenta}❯%f "
 
 __prompt_human_time() {
-  local -i total_s=$1
-  if ((total_s < 60)); then
-    typeset -g REPLY="${total_s}s"
+  local -F elapsed=$1
+  if ((elapsed < 1)); then
+    local -i ms=$((elapsed * 1000))
+    typeset -g REPLY="${ms}ms"
+  elif ((elapsed < 10)); then
+    printf -v REPLY "%.1fs" $elapsed
+  elif ((elapsed < 60)); then
+    local -i s=$elapsed
+    typeset -g REPLY="${s}s"
   else
+    local -i total_s=$elapsed
     local -i s=$((total_s % 60))
     local -i m=$(((total_s / 60) % 60))
     local -i h=$(((total_s / 3600) % 24))
@@ -24,7 +31,7 @@ __prompt_human_time() {
 }
 
 __prompt_preexec() {
-  __prompt_timer=$EPOCHSECONDS
+  __prompt_timer=$EPOCHREALTIME
 }
 
 __prompt_precmd() {
@@ -33,13 +40,13 @@ __prompt_precmd() {
   # duration
   local duration_str=""
   if ((__prompt_timer > 0)); then
-    local -i elapsed=$((EPOCHSECONDS - __prompt_timer))
+    local elapsed=$((EPOCHREALTIME - __prompt_timer))
     __prompt_timer=0
 
     if ((exit_code != 0)); then
       __prompt_human_time $elapsed
       duration_str=" %F{red}${REPLY}%f"
-    elif ((elapsed > 5)); then
+    elif ((elapsed >= 2)); then
       __prompt_human_time $elapsed
       duration_str=" %F{yellow}${REPLY}%f"
     fi
